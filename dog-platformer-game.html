@@ -36,7 +36,11 @@
         dogImg.src = 'data:image/svg+xml;base64,' + btoa(dogSprite);
 
         // Load the bark sound
-        const barkSound = new Audio('bark2.mp3');
+        const barkSound = new Audio('bark.mp3');
+
+        // Load and set up the background music
+        const backgroundMusic = new Audio('music.mp3');
+        backgroundMusic.loop = true;
 
         const player = {
             x: 50,
@@ -121,7 +125,19 @@
             if (e.key === 'ArrowLeft') leftPressed = false;
         });
 
-        dogImg.onload = update;
+        // Start the background music when the game loads
+        function startBackgroundMusic() {
+            backgroundMusic.play().catch(e => {
+                console.log("Audio play failed:", e);
+                // Retry playing on the next user interaction
+                document.body.addEventListener('click', () => backgroundMusic.play(), { once: true });
+            });
+        }
+
+        dogImg.onload = () => {
+            update();
+            startBackgroundMusic();
+        };
     </script>
 </body>
 </html>
